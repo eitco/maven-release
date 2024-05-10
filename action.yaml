@@ -1,0 +1,52 @@
+name: 'maven deploy'
+description: 'deploy using maven as build tool'
+inputs:
+  java-version:
+    description: 'jdk version'
+    default: '17'
+  java-distribution:
+    description: 'jdk distribution'
+    default: 'temurin'
+  gpg-private-key:
+    description: 'private key for artifact signing'
+    required: true
+  gpg-key-name:
+    description: 'name of the gpg private key'
+    required: true
+  gpg-passphrase:
+    description: 'pass phrase for te gpg signing key'
+    required: true
+  deploy-user:
+    description: "user to authenticate at artifact repository"
+    required: true
+  deploy-password:
+    description: "password to authenticate at artifact repository"
+    required: true
+  global-settings-location:
+    description: "path inside the repository to the global maven settings used to deploy release artifacts"
+    default: "deployment/global-settings.xml"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - name: set up jdk
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: ${{ inputs.java-distribution }}
+        cache: maven
+        server-id: github
+        gpg-private-key: ${{ inputs.gpg-private-key }}
+    - name: Configure Git user
+      shell: bash
+      run: |
+        git config user.email "opensource@eitco.de"
+        git config user.name "eitco"
+    - name: maven release
+      shell: bash
+      run: export GPG_TTY=$(tty) && mvn --batch-mode -e --global-settings ${{ inputs.global-settings-location }} --batch-mode release:prepare release:perform
+      env:
+        GPG_KEY_NAME: ${{ inputs.gpg-key-name }}
+        MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
+        OSSRH_JIRA_USERNAME: ${{ inputs.deploy-user }}
+        OSSRH_JIRA_PASSWORD: ${{ inputs.deploy-password }}
