@@ -44,7 +44,7 @@ runs:
         git config user.name "eitco"
     - name: maven release
       shell: bash
-      run: export GPG_TTY=$(tty) && mvn --batch-mode -e --global-settings ${{ inputs.global-settings-location }} --batch-mode release:prepare release:perform
+      run: export GPG_TTY=$(tty) && mvn --batch-mode -e --global-settings ${{ inputs.global-settings-location }} release:prepare release:perform
       env:
         GPG_KEY_NAME: ${{ inputs.gpg-key-name }}
         MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
