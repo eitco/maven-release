@@ -25,9 +25,16 @@ inputs:
   global-settings-location:
     description: "path inside the repository to the global maven settings used to deploy release artifacts"
     default: "deployment/global-settings.xml"
+  git-ssh-private-key:
+    description: "private ssh key to push git changes to github pages repository"
+    default: ''
 runs:
   using: "composite"
   steps:
+    - uses: webfactory/ssh-agent@v0.9.0
+      if: ${{ inputs.git-ssh-private-key != '' }}
+      with:
+        ssh-private-key: ${{ inputs.git-ssh-private-key }}
     - uses: actions/checkout@v4
     - name: set up jdk
       uses: actions/setup-java@v4
