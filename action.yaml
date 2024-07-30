@@ -40,8 +40,8 @@ runs:
     - name: Configure Git user
       shell: bash
       run: |
-        git config user.email "opensource@eitco.de"
-        git config user.name "eitco"
+        git config --global user.email "opensource@eitco.de"
+        git config --global user.name "eitco"
     - name: maven release
       shell: bash
       run: export GPG_TTY=$(tty) && mvn --batch-mode -e --global-settings ${{ inputs.global-settings-location }} release:prepare release:perform
