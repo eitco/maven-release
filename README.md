@@ -5,11 +5,14 @@
 This github action starts a maven release build. It is a [composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
 that:
 
-1. checks out the repository source code
+1. optionally sets an ssh private key
+    * using the [ssh agent action](https://github.com/webfactory/ssh-agent)
+    * if the parameter `git-ssh-private-key` is not set, this step is omitted
+2. checks out the repository source code
     * using the [default checkout action](https://github.com/actions/checkout)
-2. sets up a jdk and maven
+3. sets up a jdk and maven
     * using the [default setup-java action](https://github.com/actions/setup-java)
-3. executes the maven release process
+4. executes the maven release process
    * it executes the [maven release plugins](https://maven.apache.org/maven-release/maven-release-plugin/) goals [`prepare`](https://maven.apache.org/maven-release/maven-release-plugin/prepare-mojo.html) and [`perform`](https://maven.apache.org/maven-release/maven-release-plugin/perform-mojo.html) 
 
 The action can be customized using the following parameters:
@@ -45,3 +48,7 @@ The path inside the repository to the global maven settings used to deploy relea
 for projects generated using [eitcos default maven github template](https://github.com/eitco/maven-template)
 
 default: **deployment/global-settings.xml**
+
+## git-ssh-private-key
+
+An ssh private key to use in later steps e.g. to commit documentation to a github pages repository. 
