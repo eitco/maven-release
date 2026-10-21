@@ -20,7 +20,7 @@ The action can be customized using the following parameters:
 ## java-version
 The (major) version of the jdk.
 
-default: **17**
+default: **21**
 
 ## java-distribution
 The jdk distribution
